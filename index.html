@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cpoint Thailand 2026 | Staff Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const staffData = [
+            { id: 1, name: "Kyota Irei", role: "Managing Director", dept: "Management", email: "k.irei@cpoint.co.th" },
+            { id: 2, name: "Nopparat Vithayasintana", role: "General Manager", dept: "Management", email: "nopparat@cpoint.co.th" },
+            { id: 3, name: "Suphanuch Pongputtipoon", role: "Marketing Manager", dept: "Marketing", email: "suphanuch@cpoint.co.th" },
+            { id: 4, name: "Pattarawadee K.", role: "Graphic Designer", dept: "Marketing", email: "pattarawadee@cpoint.co.th" },
+            { id: 5, name: "Ariya P.", role: "Digital Marketing / Content", dept: "Marketing", email: "ariya@cpoint.co.th" },
+            { id: 6, name: "Sununta Jaitong", role: "Account Executive (Sales)", dept: "Sales", email: "sununta@cpoint.co.th" },
+            { id: 7, name: "Nittaya Phromsing", role: "Account Executive (Sales)", dept: "Sales", email: "nittaya@cpoint.co.th" },
+            { id: 8, name: "Tidawan Sacliew", role: "Office Admin", dept: "Admin", email: "tidawan@cpoint.co.th" },
+            { id: 9, name: "Surat Keawkumpa", role: "Packing Staff", dept: "Packing", email: "surat@cpoint.co.th" },
+            { id: 10, name: "Kwanchanok Suriya", role: "Packing Staff", dept: "Packing", email: "kwanchanok@cpoint.co.th" }
+        ];
+
+        function App() {
+            const [search, setSearch] = useState('');
+            const [filter, setFilter] = useState('All');
+
+            const departments = ['All', 'Management', 'Marketing', 'Sales', 'Admin', 'Packing'];
+
+            const filteredStaff = staffData.filter(staff => {
+                const matchesSearch = staff.name.toLowerCase().includes(search.toLowerCase()) || 
+                                    staff.role.toLowerCase().includes(search.toLowerCase());
+                const matchesFilter = filter === 'All' || staff.dept === filter;
+                return matchesSearch && matchesFilter;
+            });
+
+            return (
+                <div className="p-6 md:p-12 max-w-6xl mx-auto min-h-screen">
+                    <header className="mb-10 text-center md:text-left">
+                        <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">Cpoint Thailand 2026</h1>
+                        <p className="text-lg text-gray-500 mt-2 font-medium">Internal Staff Directory Management System</p>
+                    </header>
+
+                    <div className="flex flex-col md:flex-row gap-4 mb-10">
+                        <div className="relative flex-1">
+                            <input 
+                                type="text" 
+                                placeholder="Search by name or role..." 
+                                className="w-full pl-5 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none transition-all shadow-sm text-lg"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide items-center">
+                            {departments.map(dept => (
+                                <button
+                                    key={dept}
+                                    onClick={() => setFilter(dept)}
+                                    className={`px-5 py-2.5 rounded-xl whitespace-nowrap text-sm font-bold transition-all ${
+                                        filter === dept 
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
+                                        : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    {dept}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {filteredStaff.map(staff => (
+                            <div key={staff.id} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                                        <i data-lucide="user"></i>
+                                    </div>
+                                    <span className="text-[10px] font-black text-blue-400 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-widest">{staff.dept}</span>
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-800 mb-1">{staff.name}</h2>
+                                <p className="text-blue-600 font-semibold mb-6">{staff.role}</p>
+                                <div className="space-y-3 pt-6 border-t border-gray-50 text-sm text-gray-400">
+                                    <div className="flex items-center gap-3">
+                                        <i data-lucide="mail" className="w-4 h-4"></i>
+                                        <span>{staff.email}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <i data-lucide="map-pin" className="w-4 h-4"></i>
+                                        <span>Bangkok Office</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {filteredStaff.length === 0 && (
+                        <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+                            <p className="text-gray-400 text-lg font-medium">No results found.</p>
+                        </div>
+                    )}
+
+                    <footer className="mt-20 pb-10 text-center text-gray-300 text-xs font-medium tracking-widest uppercase">
+                        © 2026 Cpoint (Thailand) Corp., Ltd.
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+        // Initialize icons after React render
+        setTimeout(() => lucide.createIcons(), 100);
+    </script>
+</body>
+</html>
